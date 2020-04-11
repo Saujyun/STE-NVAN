@@ -74,7 +74,7 @@ if __name__ == '__main__':
         exit()
     else:
         state = torch.load(args.load_ckpt)
-        network.load_state_dict(state,strict=True)
+        network.load_state_dict(state,strict=False)
 
 
     cmc,map = validation(network,test_dataloader,args)

@@ -26,10 +26,12 @@ class TripletLoss(nn.Module):
             if id is None:
                  raise RuntimeError('foward is in id mode, please input id!')
             else:
+                 print('--------------test-----------------')
                  identity_mask = torch.eye(feat.size(0)).byte()
                  identity_mask = identity_mask.cuda() if id.is_cuda else identity_mask
                  same_id_mask = torch.eq(id.unsqueeze(1), id.unsqueeze(0))
                  negative_mask = same_id_mask ^ 1
+                 #print('negative_mask'+type(negative_mask))
                  positive_mask = same_id_mask ^ identity_mask
         elif mode == 'mask':
             if pos_mask is None or neg_mask is None:
