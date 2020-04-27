@@ -14,7 +14,7 @@ from torchvision.transforms import Compose,ToTensor,Normalize,Resize
 import torch.backends.cudnn as cudnn
 cudnn.benchmark=True
 import os
-os.environ['CUDA_VISIBLE_DEVICES']='0'
+os.environ['CUDA_VISIBLE_DEVICES']='1'
 torch.multiprocessing.set_sharing_strategy('file_system')
 
 def validation(network,dataloader,args):
@@ -73,8 +73,21 @@ if __name__ == '__main__':
         print('No ckpt!')
         exit()
     else:
+        print('-------------- ckpt! -----------------')
         state = torch.load(args.load_ckpt)
-        network.load_state_dict(state,strict=True)
+        for k in state:
+            print(k)
+        from collections import OrderedDict
+        new_state_dict = OrderedDict()
+        for k, v in state.items():
+            if 'module' not in k:
+                k = 'module.' + k
+            else:
+                k = k.replace('module.module.features.', 'module.features.')
+            new_state_dict[k] = v
+        # network = torch.nn.DataParallel(network)
+        network.load_state_dict(new_state_dict,strict = True)
+
 
 
     cmc,map = validation(network,test_dataloader,args)

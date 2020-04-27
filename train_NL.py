@@ -90,9 +90,9 @@ if __name__ == '__main__':
     critetion_id  = nn.CrossEntropyLoss().cuda()
     # 2. Optimizer
     if args.optimizer == 'sgd':
-        optimizer = optim.SGD(network.parameters(),lr = args.lr,momentum=0.9,weight_decay = 1e-4)
+        optimizer = optim.SGD(filter(lambda  p:p.requires_grad,network.parameters()),lr = args.lr,momentum=0.9,weight_decay = 1e-4)
     else:
-        optimizer = optim.Adam(network.parameters(),lr = args.lr,weight_decay = 5e-5)
+        optimizer = optim.Adam(filter(lambda  p:p.requires_grad,network.parameters()),lr = args.lr,weight_decay = 5e-5)
     if args.lr_step_size != 0:
         scheduler = optim.lr_scheduler.StepLR(optimizer, args.lr_step_size, 0.1)
 
