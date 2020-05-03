@@ -1,4 +1,6 @@
 import os
+import re
+import matplotlib.pyplot as plt
 import sys
 import time
 import numpy as np
@@ -195,5 +197,40 @@ def Get_Video_test_DataLoader(db_txt,info,query,transform,batch_size=10,shuffle=
     dataloader = DataLoader(dataset,batch_size=batch_size,collate_fn=Video_test_collate_fn,shuffle=shuffle,worker_init_fn=lambda _:np.random.seed(),num_workers=num_workers)
     return dataloader
 
+def draw_curve():
+    y_mAP = []
+    x_epoch = []
+    y_rank1 = []
+    fp = open('/home/lhy/-/模型论文代码/STE-NVAN/ckpt_NL_0230/loss.txt',"r")
+    line = fp.readline()
+    while line:
+        if(line.__contains__("epoch")):
+            print("--" + line)
+            y1 = re.compile('(?<=rank-1)\s*\d*\.\d*').findall(line)
+            y2 = re.compile('(?<=mAP)\s*\d*\.\d*').findall(line)
+            x = re.compile('(?<=epoch).\d+').findall(line)
+            y_rank1.append(y1)
+            y_mAP.append(y2)
+            x_epoch.append(x)
+            print(y1,y2,x)
 
+        line = fp.readline()
+    ax1 = plt.figure().add_subplot(111)
+    ax1.plot(x_epoch,y_rank1,color ="r",linestyle = "-",marker="^",label='y_rank1')
+    ax1.set_ylable='y_rank1'
+    plt.legend(loc=2)
+
+    ax2 = ax1.twinx()
+    ax2.plot(x_epoch,y_mAP,color ="b",linestyle = "-",marker="s",label='y_mAP')
+    # ax2.ylabel()不能用啦
+    ax2.ylabel='y_mAP'
+    plt.xlabel('Epoch')
+    plt.title('epoch_rank_mAP')
+    plt.legend(loc=4)
+    plt.savefig("epoch_rank_mAP.png")
+    plt.show()
+    fp.close()
+
+if __name__ == '__main__':
+    draw_curve()
 
