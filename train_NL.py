@@ -117,7 +117,7 @@ if __name__ == '__main__':
             trip_loss_list = []
             track_id_loss_list = []
             if cmc >= best_cmc:
-                torch.save(network.state_dict(),os.path.join(args.ckpt,'ckpt_best.pth'))
+                torch.save(network.state_dict(),os.path.join(args.ckpt,'ckpt_ste_nl_best.pth'))
                 best_cmc = cmc
                 f.write('best\n')
             f.close()

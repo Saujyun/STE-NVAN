@@ -1,0 +1,26 @@
+1.Traceback (most recent call last):
+  File "evaluate.py", line 88, in <module>
+    network.load_state_dict(new_state_dict,strict=True)
+  File "/home/lhy/.local/lib/python3.5/site-packages/torch/nn/modules/module.py", line 721, in load_state_dict
+    self.__class__.__name__, "\n\t".join(error_msgs)))
+RuntimeError: Error(s) in loading state_dict for DataParallel:
+
+2.Traceback (most recent call last):
+  File "train_NL.py", line 95, in <module>
+    optimizer = optim.Adam(network.parameters(),lr = args.lr,weight_decay = 5e-5)
+  File "/home/lhy/.local/lib/python3.5/site-packages/torch/optim/adam.py", line 41, in __init__
+    super(Adam, self).__init__(params, defaults)
+  File "/home/lhy/.local/lib/python3.5/site-packages/torch/optim/optimizer.py", line 43, in __init__
+    self.add_param_group(param_group)
+  File "/home/lhy/.local/lib/python3.5/site-packages/torch/optim/optimizer.py", line 193, in add_param_group
+    raise ValueError("optimizing a parameter that doesn't require gradients")
+ValueError: optimizing a parameter that doesn't require gradients
+
+A:更改为optimizer = optim.SGD(filter(lambda  p:p.requires_grad,network.parameters()),lr = args.lr,momentum=0.9,weight_decay = 1e-4)
+
+
+3.AttributeError: module 'torch' has no attribute 'flip'
+升级torch版本 （https://blog.csdn.net/xqlily/article/details/86528137）
+
+4.RuntimeError: CUDA out of memory. Tried to allocate 128.00 MiB (GPU 0; 10.92 GiB total capacity; 9.71 GiB already allocated; 74.00 MiB free; 426.00 K
+A:降低class_per_batch/batch_size 值 提高num_workers值

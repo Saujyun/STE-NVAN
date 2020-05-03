@@ -2,3 +2,7 @@ MARS_database/
 DukeV_database/
 __pycache__/
 ckpt*/
+ckpt_NL_0230/
+ckpt_baseline_mean
+*.pth
+.idea/
